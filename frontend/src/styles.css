@@ -1,0 +1,136 @@
+/* Resetting default margin, padding, and border */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Setting body background color and font family */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e6dcc6;
+  margin: 0;
+}
+
+/* Centering container horizontally and vertically */
+.file-upload-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Styling file upload boxes */
+.box {
+  background-color: #fff;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  margin: 20px 0;
+  width: 500px;
+  transition: transform 0.3s ease;
+}
+
+.box:hover {
+  transform: translateY(-10px);
+}
+
+/* Styling label for file upload */
+label {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  display: block;
+}
+
+/* Styling file input */
+input[type="file"] {
+  margin-bottom: 40px;
+}
+
+/* Styling column checkboxes */
+.column-checkboxes {
+  margin-top: 40px;
+}
+
+.column-checkbox {
+  margin-bottom: 30px;
+}
+
+.column-checkbox input[type="checkbox"] {
+  margin-right: 20px;
+}
+
+/* Styling merged CSV button */
+.merge-button {
+  background-color: #cc0033; /* Rutgers University Red */
+  border: none;
+  color: white;
+  padding: 20px 40px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 40px 0;
+  cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s;
+}
+
+.merge-button:hover {
+  background-color: #d80032; /* Lighter Rutgers University Red */
+}
+
+/* Adding padding to the top of the top box */
+.box.left-box {
+  padding-top: 30px;
+}
+
+.file-upload-container {
+  padding: 20px;
+}
+.box {
+  margin-bottom: 20px;
+}
+.file-link {
+  display: block;
+  margin-bottom: 10px;
+}
+.erase-button {
+  margin-top: 10px;
+}
+.csv-contents-container {
+  border: 1px solid #fff;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 20px;
+  width: 80%; /* Adjust as needed */
+}
+.csv-file-container {
+  margin-bottom: 10px;
+}
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.checkbox-label input[type="checkbox"] {
+  margin-right: 5px;
+}
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+.flex-item {
+  flex-basis: 48%; /* Adjust as needed */
+}
+.content-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}

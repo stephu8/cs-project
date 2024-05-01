@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload and Merge</title>
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+  <div class="file-upload-container">
+    <!-- File Upload Box -->
+    <div class="box">
+      <label for="file-upload">Drag and drop CSV or ZIP files here or click to upload</label>
+      <input type="file" id="file-upload" accept=".csv,.zip" onchange="handleFileUpload(event)" multiple>
+    </div>
+
+    <!-- Display Uploaded File Links -->
+    <div id="file-links"></div>
+
+    <!-- Erase Files Button -->
+    <button class="erase-button" onclick="eraseFiles()">Erase Files</button>
+
+    <!-- File Contents Boxes for Columns and Tables -->
+    <div class="flex-container">
+      <div class="csv-contents-container flex-item" id="columns-contents" style="display: none;">
+        <h3 class="content-title">Columns:</h3>
+        <!-- Uploaded CSV file columns will be displayed here -->
+      </div>
+      <div class="csv-contents-container flex-item" id="tables-contents" style="display: none;">
+        <h3 class="content-title">Tables:</h3>
+        <!-- Uploaded CSV file tables will be displayed here -->
+      </div>
+    </div>
+
+    <!-- Create Merged CSV Button -->
+    <div class="center-master-div">
+      <button class="merge-button" onclick="handleCreateMergedCSV()">Create Merged CSV</button>
+    </div>
+  </div>
+
+  <script>
+    // Check if there are files stored in localStorage
+    let uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles')) || [];
+    let allColumns = [];
+
+    // Display uploaded file links
+    displayUploadedFileLinks();
+
+    function handleFileUpload(event) {
+      const files = event.target.files;
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const fileName = file.name;
+          const fileType = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+
+          if (fileType === 'csv') {
+            const csvContents = e.target.result;
+            const columns = getCSVColumns(csvContents);
+            allColumns.push({ name: fileName, columns: columns });
+            uploadedFiles.push({ name: fileName, type: fileType, content: csvContents, columns: columns });
+          } else if (fileType === 'zip') {
+            alert('ZIP file upload is not supported yet.');
+            return;
+          } else {
+            alert('Unsupported file type. Please upload a CSV or ZIP file.');
+            return;
+          }
+
+          displayUploadedFileLinks();
+          saveUploadedFilesToLocalStorage();
+        };
+
+        reader.readAsText(file);
+      }
+    }
+
+    function displayUploadedFileLinks() {
+      const fileLinksContainer = document.getElementById('file-links');
+      fileLinksContainer.innerHTML = ''; // Clear previous contents
+
+      uploadedFiles.forEach(file => {
+        const fileLink = document.createElement('a');
+        fileLink.classList.add('file-link');
+        fileLink.textContent = file.name;
+        fileLink.href = '#';
+        fileLink.onclick = function() {
+          showSample(file.name, file.type);
+        };
+        fileLinksContainer.appendChild(fileLink);
+      });
+
+      // Show CSV contents boxes if there are uploaded files
+      const columnsContentsBox = document.getElementById('columns-contents');
+      const tablesContentsBox = document.getElementById('tables-contents');
+      columnsContentsBox.style.display = uploadedFiles.length > 0 ? 'block' : 'none';
+      tablesContentsBox.style.display = uploadedFiles.length > 0 ? 'block' : 'none';
+      if (uploadedFiles.length > 0) {
+        populateColumnsContents();
+        populateTablesContents();
+      }
+    }
+
+    function populateColumnsContents() {
+      const columnsContentsBox = document.getElementById('columns-contents');
+      columnsContentsBox.innerHTML = ''; // Clear previous contents
+
+      // Populate columns for each uploaded file
+      const columnsHeader = document.createElement('h4');
+      columnsHeader.textContent = "Columns";
+      columnsContentsBox.appendChild(columnsHeader);
+      uploadedFiles.forEach(file => {
+        file.columns.forEach(column => {
+          const checkboxLabel = document.createElement('label');
+          checkboxLabel.classList.add('checkbox-label');
+          checkboxLabel.innerHTML = `<input type="checkbox" name="columns" value="${column}" checked>${column}`;
+          columnsContentsBox.appendChild(checkboxLabel);
+        });
+      });
+    }
+
+    function populateTablesContents() {
+      const tablesContentsBox = document.getElementById('tables-contents');
+      tablesContentsBox.innerHTML = ''; // Clear previous contents
+
+      // Populate tables for each uploaded file
+      const tablesHeader = document.createElement('h4');
+      tablesHeader.textContent = "Tables";
+      tablesContentsBox.appendChild(tablesHeader);
+      uploadedFiles.forEach(file => {
+        const checkboxLabel = document.createElement('label');
+        checkboxLabel.classList.add('checkbox-label');
+        checkboxLabel.innerHTML = `<input type="checkbox" name="tables" value="${file.name}" checked>${file.name}`;
+        tablesContentsBox.appendChild(checkboxLabel);
+      });
+    }
+
+    function eraseFiles() {
+      uploadedFiles = [];
+      allColumns = [];
+      displayUploadedFileLinks();
+      saveUploadedFilesToLocalStorage();
+    }
+
+    function saveUploadedFilesToLocalStorage() {
+      localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+    }
+
+    function handleCreateMergedCSV() {
+      // Generate merged CSV file here
+    }
+
+    function showSample(fileName, fileType) {
+      const file = uploadedFiles.find(f => f.name === fileName && f.type === fileType);
+      if (file) {
+        sessionStorage.setItem('sampleFileContent', file.content);
+        window.location.href = 'sample.html';
+      } else {
+        alert('File not found.');
+      }
+    }
+
+    // Helper function to extract column names from CSV content
+    function getCSVColumns(csvContent) {
+      const lines = csvContent.trim().split('\n');
+      return lines[0].split(',');
+    }
+  </script>
+</body>
+</html>
